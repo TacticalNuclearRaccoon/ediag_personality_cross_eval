@@ -19,8 +19,8 @@ C'est aussi un revel qui aime bien prendre des risuqes et se projeter.\n
 
 
 # Define your result_filename and global_results_filename
-result_filename = "results.txt"
-global_results_filename = "global_results.txt"
+#result_filename = "results.txt"
+#global_results_filename = "global_results.txt"
 icon = "Favicon_2x.ico"
 
 #post to database
@@ -75,6 +75,38 @@ st.image('Banniere argios.png', use_container_width=True)
 
 st.set_page_config(layout='wide', page_icon=icon, page_title='Les autres selon moi')
 st.title=("Comment je perçois les autres")
+
+#st.header("Rappel des quatres quadrants")
+rappel = st.checkbox("Montre moi les 4 quadrants")
+if rappel:
+    st.header("Quadrant A - L'ingénieur")
+    inge_col1, inge_col2 = st.columns(2)
+    with inge_col1:
+        st.image('Inge.png', width=300)
+    with inge_col2:
+        st.subheader("Analytique")
+        st.write(A_text)
+    st.header("Quandrant B - Cartographe")
+    carto_col1, carto_col2 = st.columns(2)
+    with carto_col1:
+        st.image('carto.png', width=300)
+    with carto_col2:
+        st.subheader("Séquentiel")
+        st.write(B_text)
+    st.header("Quandrant C - Barde")
+    barde_col1, barde_col2 = st.columns(2)
+    with barde_col1:
+        st.image('bard.png', width=300)
+    with barde_col2:
+        st.subheader("Interpersonnel")
+        st.write(C_text)
+    st.header("Quandrant D - Inventeur")
+    artisti_col1, artisti_col2 = st.columns(2)
+    with artisti_col1:
+        st.image('artistii.png', width=300)
+    with artisti_col2:
+        st.subheader("Imaginative")
+        st.write(D_text)
 
 user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
 orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
