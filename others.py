@@ -108,10 +108,15 @@ if rappel:
         st.subheader("Imaginative")
         st.write(D_text)
 
-user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
-orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
-
 data = fetch_results_from_database()
+
+user_list = [item["user"] for item in data]
+orga_list = [item["organisation"] for item in data]
+user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
+orga = st.selectbox("L'id du test", orga_list)
+
+#user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
+#orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
 
 filtered_data = [entry for entry in data if entry["user"] != user]
 colleagues = [entry for entry in filtered_data if entry["organisation"] == orga]
