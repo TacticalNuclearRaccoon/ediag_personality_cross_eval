@@ -78,10 +78,10 @@ except:
 st.set_page_config(layout='wide', page_icon=icon, page_title='Les autres selon moi')
 st.title=("Comment je perçois les autres")
 
-#st.header("Rappel des quatres quadrants")
-rappel = st.checkbox("Montre moi les 4 quadrants")
+#st.header("Rappel des quatres Quandrants")
+rappel = st.checkbox("Montre moi les 4 quandrant")
 if rappel:
-    st.header("Quadrant A - L'ingénieur")
+    st.header("Quandrant A - L'ingénieur")
     inge_col1, inge_col2 = st.columns(2)
     with inge_col1:
         st.image('Inge.png', width=300)
