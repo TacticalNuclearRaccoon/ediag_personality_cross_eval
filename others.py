@@ -70,16 +70,18 @@ def update_user_evaluation(user, orga, evaluations):
     response.raise_for_status()
     return response
 
-
-st.image('Banniere argios.png', use_container_width=True)
+try:
+    st.image('Banniere argios.svg', use_container_width=True)
+except:
+    st.image('Banniere argios.png', use_container_width=True)
 
 st.set_page_config(layout='wide', page_icon=icon, page_title='Les autres selon moi')
 st.title=("Comment je perçois les autres")
 
-#st.header("Rappel des quatres quadrants")
-rappel = st.checkbox("Montre moi les 4 quadrants")
+#st.header("Rappel des quatres Quandrants")
+rappel = st.checkbox("Montre moi les 4 quandrant")
 if rappel:
-    st.header("Quadrant A - L'ingénieur")
+    st.header("Quandrant A - L'ingénieur")
     inge_col1, inge_col2 = st.columns(2)
     with inge_col1:
         st.image('Inge.png', width=300)
@@ -110,41 +112,44 @@ if rappel:
 
 data = fetch_results_from_database()
 
-user_list = [item["user"] for item in data]
 orga_list = set([item["organisation"] for item in data])
-user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
 orga = st.selectbox("L'id du test", orga_list)
+user_list = [item["user"] for item in data if item["organisation"] == orga]
+user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
 
-#user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
-#orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
 
-filtered_data = [entry for entry in data if entry["user"] != user]
-colleagues = [entry for entry in filtered_data if entry["organisation"] == orga]
+start_eval = st.button("Commencer l'évaluation")
+if start_eval:
+    #user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
+    #orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
 
-colleagues_list = []
-for item in colleagues:
-    colleagues_list.append(item["user"])
+    filtered_data = [entry for entry in data if entry["user"] != user]
+    colleagues = [entry for entry in filtered_data if entry["organisation"] == orga]
 
-other_scores = {}
+    colleagues_list = []
+    for item in colleagues:
+        colleagues_list.append(item["user"])
 
-for other in colleagues_list:
-    st.header(f"Quelle est selon vous le profil de : {other}")
-    A_other = st.slider("Quandrant A - Ingénieur", min_value=0, max_value=4, step=1, key=f"A_{other}")
-    B_other = st.slider("Quandrant B - Cartographe", min_value=0, max_value=4, step=1, key=f"B_{other}")
-    C_other = st.slider("Quandrant C - Barde", min_value=0, max_value=4, step=1, key=f"C_{other}")
-    D_other = st.slider("Quandrant D - Inventeur", min_value=0, max_value=4, step=1, key=f"D_{other}")
-    other_scores[f"A_{other}"] = A_other
-    other_scores[f"B_{other}"] = B_other
-    other_scores[f"C_{other}"] = C_other
-    other_scores[f"D_{other}"] = D_other
+    other_scores = {}
 
-if st.button("Soumettre mes évaluations"):
-    if user and orga:
-        try:
-            update_user_evaluation(user, orga, other_scores)
-            st.success("Évaluations enregistrées avec succès !")
-        except requests.exceptions.HTTPError as e:
-            st.error(f"Erreur lors de la mise à jour : {e}")
-    else:
-        st.warning("Veuillez renseigner votre pseudo et l'ID du test.")
+    for other in colleagues_list:
+        st.header(f"Quelle est selon vous le profil de : {other}")
+        A_other = st.slider("Quandrant A - Ingénieur", min_value=0, max_value=4, step=1, key=f"A_{other}")
+        B_other = st.slider("Quandrant B - Cartographe", min_value=0, max_value=4, step=1, key=f"B_{other}")
+        C_other = st.slider("Quandrant C - Barde", min_value=0, max_value=4, step=1, key=f"C_{other}")
+        D_other = st.slider("Quandrant D - Inventeur", min_value=0, max_value=4, step=1, key=f"D_{other}")
+        other_scores[f"A_{other}"] = A_other
+        other_scores[f"B_{other}"] = B_other
+        other_scores[f"C_{other}"] = C_other
+        other_scores[f"D_{other}"] = D_other
+
+    if st.button("Soumettre mes évaluations"):
+        if user and orga:
+            try:
+                update_user_evaluation(user, orga, other_scores)
+                st.success("Évaluations enregistrées avec succès !")
+            except requests.exceptions.HTTPError as e:
+                st.error(f"Erreur lors de la mise à jour : {e}")
+        else:
+            st.warning("Veuillez renseigner votre pseudo et l'ID du test.")
 

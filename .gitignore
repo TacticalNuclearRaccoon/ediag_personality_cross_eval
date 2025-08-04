@@ -1,5 +1,4 @@
 #python environments
 env
-
 #secrets
 .streamlit/secrets.toml
