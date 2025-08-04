@@ -112,10 +112,11 @@ if rappel:
 
 data = fetch_results_from_database()
 
-user_list = [item["user"] for item in data]
 orga_list = set([item["organisation"] for item in data])
-user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
 orga = st.selectbox("L'id du test", orga_list)
+user_list = [item["user"] for item in data if item["organisation"] == orga]
+user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
+
 
 start_eval = st.button("Commencer l'évaluation")
 if start_eval:
