@@ -117,9 +117,11 @@ orga = st.selectbox("L'id du test", orga_list)
 user_list = [item["user"] for item in data if item["organisation"] == orga]
 user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
 
-
-start_eval = st.button("Commencer l'évaluation")
-if start_eval:
+if "start_eval" not in st.session_state:
+    st.session_state.start_eval = False
+if st.button("Commencer l'évaluation"):
+    st.session_state.start_eval = True
+if st.session_state.start_eval:
     #user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
     #orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
 
