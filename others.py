@@ -27,6 +27,34 @@ icon = "Favicon_2x.ico"
 DATABASE_URL = st.secrets["DATABASE_URL"]
 DATABASE_API_KEY = st.secrets["DATABASE_API_KEY"]
 
+def get_organizations_from_database():
+    url = f"{DATABASE_URL}/rest/v1/organizations"
+    headers = {
+        "apikey": DATABASE_API_KEY,
+        "Authorization": f"Bearer {DATABASE_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            orgs = response.json()
+            
+            if not orgs:
+                st.warning("No organizations found in database")
+                return []
+            
+            names = [org['name'] for org in orgs if org.get("status") == "ongoing"]
+            return names
+        else:
+            st.warning(f"Failed to fetch organizations: {response.status_code}")
+            return []
+    except Exception as e:
+        st.warning(f"Error fetching organizations: {e}")
+        return []
+
+
 def fetch_results_from_database():
     url = f"{DATABASE_URL}/rest/v1/hermann_teams"
     headers = {
@@ -112,8 +140,9 @@ if rappel:
 
 data = fetch_results_from_database()
 
-orga_list = set([item["organisation"] for item in data])
-orga = st.selectbox("L'id du test", orga_list)
+list_of_orga = get_organizations_from_database()
+
+orga = st.selectbox("L'id du test", list_of_orga)
 user_list = [item["user"] for item in data if item["organisation"] == orga]
 user = st.selectbox("Votre pseudo (utilisé pour le test)", user_list)
 
