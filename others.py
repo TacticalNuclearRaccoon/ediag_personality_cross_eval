@@ -106,31 +106,31 @@ except:
 st.set_page_config(layout='wide', page_icon=icon, page_title='Les autres selon moi')
 st.title=("Comment je perçois les autres")
 
-#st.header("Rappel des quatres Quandrants")
-rappel = st.checkbox("Montre moi les 4 quandrant")
+#st.header("Rappel des quatres Quadrants")
+rappel = st.checkbox("Montre moi les 4 quadrant")
 if rappel:
-    st.header("Quandrant A - L'ingénieur")
+    st.header("Quadrant A - L'ingénieur")
     inge_col1, inge_col2 = st.columns(2)
     with inge_col1:
         st.image('Inge.png', width=300)
     with inge_col2:
         st.subheader("Analytique")
         st.write(A_text)
-    st.header("Quandrant B - Cartographe")
+    st.header("Quadrant B - Cartographe")
     carto_col1, carto_col2 = st.columns(2)
     with carto_col1:
         st.image('carto.png', width=300)
     with carto_col2:
         st.subheader("Séquentiel")
         st.write(B_text)
-    st.header("Quandrant C - Barde")
+    st.header("Quadrant C - Barde")
     barde_col1, barde_col2 = st.columns(2)
     with barde_col1:
         st.image('bard.png', width=300)
     with barde_col2:
         st.subheader("Interpersonnel")
         st.write(C_text)
-    st.header("Quandrant D - Inventeur")
+    st.header("Quadrant D - Inventeur")
     artisti_col1, artisti_col2 = st.columns(2)
     with artisti_col1:
         st.image('artistii.png', width=300)
@@ -165,10 +165,10 @@ if st.session_state.start_eval:
 
     for other in colleagues_list:
         st.header(f"Quelle est selon vous le profil de : {other}")
-        A_other = st.slider("Quandrant A - Ingénieur", min_value=0, max_value=4, step=1, key=f"A_{other}")
-        B_other = st.slider("Quandrant B - Cartographe", min_value=0, max_value=4, step=1, key=f"B_{other}")
-        C_other = st.slider("Quandrant C - Barde", min_value=0, max_value=4, step=1, key=f"C_{other}")
-        D_other = st.slider("Quandrant D - Inventeur", min_value=0, max_value=4, step=1, key=f"D_{other}")
+        A_other = st.slider("Quadrant A - Ingénieur", min_value=0, max_value=4, step=1, key=f"A_{other}")
+        B_other = st.slider("Quadrant B - Cartographe", min_value=0, max_value=4, step=1, key=f"B_{other}")
+        C_other = st.slider("Quadrant C - Barde", min_value=0, max_value=4, step=1, key=f"C_{other}")
+        D_other = st.slider("Quadrant D - Inventeur", min_value=0, max_value=4, step=1, key=f"D_{other}")
         other_scores[f"A_{other}"] = A_other
         other_scores[f"B_{other}"] = B_other
         other_scores[f"C_{other}"] = C_other
