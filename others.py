@@ -151,8 +151,6 @@ if "start_eval" not in st.session_state:
 if st.button("Commencer l'évaluation"):
     st.session_state.start_eval = True
 if st.session_state.start_eval:
-    #user = st.text_input('Renseignez pseudo', placeholder='Votre pseudo ici')
-    #orga = st.text_input("Renseignez l'id du test", placeholder="L'id qu'on vous a fourni pour ce test")
 
     filtered_data = [entry for entry in data if entry["user"] != user]
     colleagues = [entry for entry in filtered_data if entry["organisation"] == orga]
@@ -166,6 +164,7 @@ if st.session_state.start_eval:
         st.session_state.evaluated = set()
 
     selected_view = st.sidebar.radio("Choisir une personne :", colleagues_list)
+    eval_sent = False
 
     # Show sliders for the selected colleague only
     st.header(f"Quelle est selon vous le profil de : {selected_view}")
@@ -187,6 +186,7 @@ if st.session_state.start_eval:
         st.info(f"Évaluation pour {selected_view} déjà enregistrée.")
 
     eval_count = len(st.session_state.evaluated)
+    st.sidebar.write(f"Évaluations complétées : {eval_count} / {len(colleagues_list)}")
 
     if eval_count == len(colleagues_list):
         st.success("Vous avez évalué tous vos collègues ! Vous pouvez maintenant soumettre vos évaluations.")
@@ -195,8 +195,12 @@ if st.session_state.start_eval:
                 try:
                     update_user_evaluation(user, orga, st.session_state.other_scores)
                     st.success("Évaluations enregistrées avec succès !")
+                    eval_sent = True
                 except requests.exceptions.HTTPError as e:
                     st.error(f"Erreur lors de la mise à jour : {e}")
             else:
                 st.warning("Veuillez renseigner votre pseudo et l'ID du test.")
 
+    if eval_sent:
+        st.balloons()
+        st.info("Vous avez terminé votre évaluation 🤗. Merci beaucoup ! Vous pouvez fermer cette fenêtre.")
