@@ -107,7 +107,7 @@ st.set_page_config(layout='wide', page_icon=icon, page_title='Les autres selon m
 st.title=("Comment je perçois les autres")
 
 #st.header("Rappel des quatres Quadrants")
-rappel = st.checkbox("Montre moi les 4 quadrant")
+rappel = st.checkbox("Montre moi les 4 quadrants")
 if rappel:
     st.header("Quadrant A - L'ingénieur")
     inge_col1, inge_col2 = st.columns(2)
@@ -157,30 +157,46 @@ if st.session_state.start_eval:
     filtered_data = [entry for entry in data if entry["user"] != user]
     colleagues = [entry for entry in filtered_data if entry["organisation"] == orga]
 
-    colleagues_list = []
-    for item in colleagues:
-        colleagues_list.append(item["user"])
+    colleagues_list = [item["user"] for item in colleagues]
 
-    other_scores = {}
+    # Use session_state to persist scores and evaluation state
+    if "other_scores" not in st.session_state:
+        st.session_state.other_scores = {}
+    if "evaluated" not in st.session_state:
+        st.session_state.evaluated = set()
 
-    for other in colleagues_list:
-        st.header(f"Quelle est selon vous le profil de : {other}")
-        A_other = st.slider("Quadrant A - Ingénieur", min_value=0, max_value=4, step=1, key=f"A_{other}")
-        B_other = st.slider("Quadrant B - Cartographe", min_value=0, max_value=4, step=1, key=f"B_{other}")
-        C_other = st.slider("Quadrant C - Barde", min_value=0, max_value=4, step=1, key=f"C_{other}")
-        D_other = st.slider("Quadrant D - Inventeur", min_value=0, max_value=4, step=1, key=f"D_{other}")
-        other_scores[f"A_{other}"] = A_other
-        other_scores[f"B_{other}"] = B_other
-        other_scores[f"C_{other}"] = C_other
-        other_scores[f"D_{other}"] = D_other
+    selected_view = st.sidebar.radio("Choisir une personne :", colleagues_list)
 
-    if st.button("Soumettre mes évaluations"):
-        if user and orga:
-            try:
-                update_user_evaluation(user, orga, other_scores)
-                st.success("Évaluations enregistrées avec succès !")
-            except requests.exceptions.HTTPError as e:
-                st.error(f"Erreur lors de la mise à jour : {e}")
-        else:
-            st.warning("Veuillez renseigner votre pseudo et l'ID du test.")
+    # Show sliders for the selected colleague only
+    st.header(f"Quelle est selon vous le profil de : {selected_view}")
+    A_other = st.slider("Quadrant A - Ingénieur", min_value=0, max_value=4, step=1, key=f"A_{selected_view}")
+    B_other = st.slider("Quadrant B - Cartographe", min_value=0, max_value=4, step=1, key=f"B_{selected_view}")
+    C_other = st.slider("Quadrant C - Barde", min_value=0, max_value=4, step=1, key=f"C_{selected_view}")
+    D_other = st.slider("Quadrant D - Inventeur", min_value=0, max_value=4, step=1, key=f"D_{selected_view}")
+
+    # Only allow submission if not already evaluated
+    if selected_view not in st.session_state.evaluated:
+        if st.button(f"Soumettre l'évaluation pour {selected_view}"):
+            st.session_state.other_scores[f"A_{selected_view}"] = A_other
+            st.session_state.other_scores[f"B_{selected_view}"] = B_other
+            st.session_state.other_scores[f"C_{selected_view}"] = C_other
+            st.session_state.other_scores[f"D_{selected_view}"] = D_other
+            st.session_state.evaluated.add(selected_view)
+            st.success(f"Évaluation pour {selected_view} enregistrée !")
+    else:
+        st.info(f"Évaluation pour {selected_view} déjà enregistrée.")
+
+    eval_count = len(st.session_state.evaluated)
+
+    if eval_count == len(colleagues_list):
+        st.success("Vous avez évalué tous vos collègues ! Vous pouvez maintenant soumettre vos évaluations.")
+        if st.button("Soumettre mes évaluations"):
+            if user and orga:
+                try:
+                    update_user_evaluation(user, orga, st.session_state.other_scores)
+                    st.success("Évaluations enregistrées avec succès !")
+                except requests.exceptions.HTTPError as e:
+                    st.error(f"Erreur lors de la mise à jour : {e}")
+            else:
+                st.warning("Veuillez renseigner votre pseudo et l'ID du test.")
 
