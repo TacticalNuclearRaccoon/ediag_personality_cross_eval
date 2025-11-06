@@ -1,0 +1,75 @@
+/* Optional: add equal spacing between cards */
+section[data-testid="stSidebar"] div.stCheckbox,
+.main div.stCheckbox {
+  max-width: 100%;
+  margin: auto;
+}
+
+/* --- Checkbox Card Styling --- */
+div.stCheckbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  /* Force uniform size */
+  width: 100%; /* Always take full width of parent container */
+  min-height: 65px; /* Consistent height */
+  box-sizing: border-box; /* Includes padding/border in width calculation */
+
+  /* Optional: remove shrink */
+  flex-shrink: 0;
+}
+
+/* Checked state highlight */
+div.stCheckbox input:checked + div > label,
+div.stCheckbox label:has(input:checked) {
+  background-color: #f3e8ff;
+  border-radius: 8px;
+  padding: 5px 8px;
+  color: #6b21a8;
+  font-weight: 600;
+}
+
+/* Hover state */
+div.stCheckbox:hover {
+  border-color: #c084fc;
+  box-shadow: 0 4px 10px rgba(192, 132, 252, 0.2);
+}
+
+/* Hide the checkbox input */
+div[data-testid="stCheckbox"] > div:first-child {
+  display: none; /* This hides the checkbox box */
+}
+
+/* Label behavior */
+div.stCheckbox label {
+  white-space: normal;
+  word-wrap: break-word;
+  font-size: 16px;
+  color: #222;
+  flex-grow: 1; /* allows label text to fill available width */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  max-width: 100%;
+  flex-shrink: 0; /* Prevent checkbox from shrinking */
+  cursor: pointer;
+}
+
+/* Target the parent container of checkboxes */
+div[data-testid="column"] > div,
+.main > div > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
